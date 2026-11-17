@@ -1,5 +1,45 @@
+# ---- saídas de build (make test, make synth, make libtakum, make demo...) ----
 build/
 *.vcd
 *.vvp
+*.o
+a.out
+
+# ---- Python ----
 __pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ---- LaTeX: arquivos auxiliares (os .pdf finais ficam no repositório) ----
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.out
+*.toc
+*.lol
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.bbl
+*.blg
+*.synctex.gz
+missfont.log
+
+# ---- resultados regeneráveis e volumosos (make bench recria em ~2 minutos) ----
+# Ficam no repositório os resumos: matrices.csv, spmv_summary.csv, spmv_instr.csv,
+# instr_vlen.csv e synth.txt. O make paper roda o make bench se as curvas faltarem.
+
+# ---- sistema operacional e editores ----
 .DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# ---- configuração local de ferramentas ----
+.claude/settings.local.json

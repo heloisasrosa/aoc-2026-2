@@ -80,3 +80,25 @@ def alu(a, b, op, n):
     if x is None or y is None:
         return nar(n)
     return encode(OPS[op](x, y), n)
+
+
+# ---- Fase 2: operações do vtdot.vv e do vncvt.t.t ---------------------------------
+
+def wmul(a, b, n):
+    """Produto com alargamento: T(n) x T(n) -> T(2n). Exato se o expoente não satura."""
+    x, y = decode(a, n), decode(b, n)
+    if x is None or y is None:
+        return nar(2 * n)
+    return encode(x * y, 2 * n)
+
+
+def ncvt(t, n):
+    """vncvt.t.t: takum de 2n bits -> n bits (arredonda o valor, satura)."""
+    return encode(decode(t, 2 * n), n)
+
+
+def dot(acc, xs, ys, n):
+    """vtdot.vv: acc (2n bits) + soma x[i]*y[i], em ordem, tudo em 2n bits."""
+    for a, b in zip(xs, ys):
+        acc = alu(acc, wmul(a, b, n), 0, 2 * n)
+    return acc

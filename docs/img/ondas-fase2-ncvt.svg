@@ -1,0 +1,63 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1279' height='186' viewBox='0 0 1279 186'>
+<rect width='100%' height='100%' fill='white'/>
+<text x='10' y='20' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='14' font-weight='bold' fill='#1a1a1a'>vncvt.t.t: takum de 16 bits para 8 bits (takum_ncvt)</text>
+<line x1='205.0' y1='30' x2='205.0' y2='164' stroke='#d5d9e0' stroke-width='1'/>
+<text x='205.0' y='178' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>0 ns</text>
+<line x1='335.0' y1='30' x2='335.0' y2='164' stroke='#d5d9e0' stroke-width='1'/>
+<text x='335.0' y='178' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>10 ns</text>
+<line x1='465.0' y1='30' x2='465.0' y2='164' stroke='#d5d9e0' stroke-width='1'/>
+<text x='465.0' y='178' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>20 ns</text>
+<line x1='595.0' y1='30' x2='595.0' y2='164' stroke='#d5d9e0' stroke-width='1'/>
+<text x='595.0' y='178' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>30 ns</text>
+<line x1='725.0' y1='30' x2='725.0' y2='164' stroke='#d5d9e0' stroke-width='1'/>
+<text x='725.0' y='178' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>40 ns</text>
+<line x1='855.0' y1='30' x2='855.0' y2='164' stroke='#d5d9e0' stroke-width='1'/>
+<text x='855.0' y='178' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>50 ns</text>
+<line x1='985.0' y1='30' x2='985.0' y2='164' stroke='#d5d9e0' stroke-width='1'/>
+<text x='985.0' y='178' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>60 ns</text>
+<line x1='1115.0' y1='30' x2='1115.0' y2='164' stroke='#d5d9e0' stroke-width='1'/>
+<text x='1115.0' y='178' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>70 ns</text>
+<line x1='1245.0' y1='30' x2='1245.0' y2='164' stroke='#d5d9e0' stroke-width='1'/>
+<text x='1245.0' y='178' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>80 ns</text>
+<text x='195' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='end'>t (T16, entrada)</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='205.0,49.0 209.0,36.0 331.0,36.0 335.0,49.0 331.0,62.0 209.0,62.0'/>
+<text x='270.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>5130 = 12,75</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='335.0,49.0 339.0,36.0 461.0,36.0 465.0,49.0 461.0,62.0 339.0,62.0'/>
+<text x='400.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>51C0 = 15</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='465.0,49.0 469.0,36.0 591.0,36.0 595.0,49.0 591.0,62.0 469.0,62.0'/>
+<text x='530.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>5180 = 14</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='595.0,49.0 599.0,36.0 721.0,36.0 725.0,49.0 721.0,62.0 599.0,62.0'/>
+<text x='660.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>5080 = 10</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='725.0,49.0 729.0,36.0 851.0,36.0 855.0,49.0 851.0,62.0 729.0,62.0'/>
+<text x='790.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>7FFF = 5,6e76</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='855.0,49.0 859.0,36.0 981.0,36.0 985.0,49.0 981.0,62.0 859.0,62.0'/>
+<text x='920.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>0001 = 1,8e-77</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='985.0,49.0 989.0,36.0 1111.0,36.0 1115.0,49.0 1111.0,62.0 989.0,62.0'/>
+<text x='1050.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>AE40 = -15</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='1115.0,49.0 1119.0,36.0 1241.0,36.0 1245.0,49.0 1241.0,62.0 1119.0,62.0'/>
+<text x='1180.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>8000 = NaR</text>
+<text x='195' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='end'>y (T8, saída)</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='205.0,91.0 209.0,78.0 331.0,78.0 335.0,91.0 331.0,104.0 209.0,104.0'/>
+<text x='270.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>51 = 12</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='335.0,91.0 339.0,78.0 591.0,78.0 595.0,91.0 591.0,104.0 339.0,104.0'/>
+<text x='465.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>52 = 16</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='595.0,91.0 599.0,78.0 721.0,78.0 725.0,91.0 721.0,104.0 599.0,104.0'/>
+<text x='660.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>50 = 8</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='725.0,91.0 729.0,78.0 851.0,78.0 855.0,91.0 851.0,104.0 729.0,104.0'/>
+<text x='790.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>7F = 8,8e71</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='855.0,91.0 859.0,78.0 981.0,78.0 985.0,91.0 981.0,104.0 859.0,104.0'/>
+<text x='920.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>01 = 1,1e-72</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='985.0,91.0 989.0,78.0 1111.0,78.0 1115.0,91.0 1111.0,104.0 989.0,104.0'/>
+<text x='1050.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>AE = -16</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='1115.0,91.0 1119.0,78.0 1241.0,78.0 1245.0,91.0 1241.0,104.0 1119.0,104.0'/>
+<text x='1180.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>80 = NaR</text>
+<text x='195' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#8a4b00' text-anchor='end'>o que acontece</text>
+<text x='270.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>trunca</text>
+<text x='400.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>arredonda</text>
+<text x='530.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>empate: ímpar sobe</text>
+<text x='660.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>empate: par fica</text>
+<text x='790.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>satura</text>
+<text x='920.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>nunca vira zero</text>
+<text x='1050.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>negativo</text>
+<text x='1180.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>NaR</text>
+</svg>

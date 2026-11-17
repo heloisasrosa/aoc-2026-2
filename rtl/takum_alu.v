@@ -3,7 +3,8 @@
 `timescale 1ns/1ps
 
 module takum_alu #(
-    parameter N = 16
+    parameter N   = 16,
+    parameter MUL = 1                // 0: só soma/subtração (sem multiplicador), usado no acumulador do vtdot
 ) (
     input  wire [N-1:0] a,
     input  wire [N-1:0] b,
@@ -14,7 +15,7 @@ module takum_alu #(
     localparam EW = 11;              // largura do expoente que vai ao encoder
     localparam AW = W + 3;           // significando + guard, round, sticky
     localparam [9:0] AW10 = AW;
-    localparam [5:0] AW6  = AW;
+    localparam [6:0] AW7  = AW;
 
     wire [N-1:0] NAR = {1'b1, {(N-1){1'b0}}};
 
@@ -31,7 +32,7 @@ module takum_alu #(
     wire [W-1:0] mb = {1'b1, fb};
 
     // ---- multiplicação ----------------------------------------------------------
-    wire [2*W-1:0] prod   = ma * mb;
+    wire [2*W-1:0] prod   = (MUL != 0) ? (ma * mb) : {(2*W){1'b0}};
     wire           p_hi   = prod[2*W-1];          // produto >= 2
     wire [2*W-1:0] p_norm  = p_hi ? prod : (prod << 1);   // bit 1 na posição 2W-1
     wire signed [EW-1:0] m_exp = $signed({{2{ea[8]}}, ea}) + $signed({{2{eb[8]}}, eb}) + (p_hi ? 11'sd1 : 11'sd0);
@@ -62,15 +63,15 @@ module takum_alu #(
     wire [AW:0]     sum    = sub ? ({1'b0, a_ext} - {1'b0, b_jam}) : ({1'b0, a_ext} + {1'b0, b_jam});
 
     // contador de zeros à esquerda 
-    reg [5:0] lz;
+    reg [6:0] lz;                                    // até AW + 1 = 64 (N = 64)
     integer i;
     always @* begin
-        lz = AW6 + 6'd1;                             // sum == 0
+        lz = AW7 + 7'd1;                             // sum == 0
         for (i = 0; i <= AW; i = i + 1)
-            if (sum[i]) lz = AW6 - i[5:0];
+            if (sum[i]) lz = AW7 - i[6:0];
     end
     wire [AW:0]   s_norm  = sum << lz;               // bit 1 em AW
-    wire signed [EW-1:0] a_exp = $signed({{2{e_big[8]}}, e_big}) + 11'sd1 - $signed({5'b0, lz});
+    wire signed [EW-1:0] a_exp = $signed({{2{e_big[8]}}, e_big}) + 11'sd1 - $signed({4'b0, lz});
     wire [N-4:0]  a_frac  = s_norm[AW-1 -: N-3];
     wire          a_stk   = |s_norm[AW-1-(N-3):0];
     wire          a_zero  = (sum == 0);

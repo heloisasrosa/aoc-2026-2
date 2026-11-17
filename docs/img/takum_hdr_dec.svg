@@ -19,128 +19,128 @@
   .splitjoinBody {
     fill:#000;
   }</style>
-  <g s:type="and" transform="translate(622,95)" s:width="30" s:height="25" id="cell_$and$rtl/takum_hdr_dec.v:48$10">
+  <g s:type="and" transform="translate(622,95)" s:width="30" s:height="25" id="cell_$and$rtl/takum_hdr_dec.v:27$10">
     <s:alias val="$and"/>
     <s:alias val="$logic_and"/>
     <s:alias val="$_AND_"/>
-    <path d="M0,0 L0,25 L15,25 A15 12.5 0 0 0 15,0 Z" class="cell_$and$rtl/takum_hdr_dec.v:48$10"/>
+    <path d="M0,0 L0,25 L15,25 A15 12.5 0 0 0 15,0 Z" class="cell_$and$rtl/takum_hdr_dec.v:27$10"/>
     <g s:x="0" s:y="5" s:pid="A"/>
     <g s:x="0" s:y="20" s:pid="B"/>
     <g s:x="30" s:y="12.5" s:pid="Y"/>
   </g>
-  <g s:type="generic" transform="translate(759,77)" s:width="30" s:height="40" id="cell_$neg$rtl/takum_hdr_dec.v:51$13">
-    <text x="15" y="-4" class="nodelabel cell_$neg$rtl/takum_hdr_dec.v:51$13" s:attribute="ref">$neg</text>
-    <rect width="30" height="20" s:generic="body" class="cell_$neg$rtl/takum_hdr_dec.v:51$13"/>
-    <g transform="translate(0,10)" s:x="0" s:y="10" s:pid="in0" id="port_$neg$rtl/takum_hdr_dec.v:51$13~A">
-      <text x="-3" y="-4" class="inputPortLabel cell_$neg$rtl/takum_hdr_dec.v:51$13">A</text>
+  <g s:type="generic" transform="translate(759,77)" s:width="30" s:height="40" id="cell_$neg$rtl/takum_hdr_dec.v:30$13">
+    <text x="15" y="-4" class="nodelabel cell_$neg$rtl/takum_hdr_dec.v:30$13" s:attribute="ref">$neg</text>
+    <rect width="30" height="20" s:generic="body" class="cell_$neg$rtl/takum_hdr_dec.v:30$13"/>
+    <g transform="translate(0,10)" s:x="0" s:y="10" s:pid="in0" id="port_$neg$rtl/takum_hdr_dec.v:30$13~A">
+      <text x="-3" y="-4" class="inputPortLabel cell_$neg$rtl/takum_hdr_dec.v:30$13">A</text>
     </g>
-    <g transform="translate(30,10)" s:x="30" s:y="10" s:pid="out0" id="port_$neg$rtl/takum_hdr_dec.v:51$13~Y">
-      <text x="5" y="-4" style="fill:#000; stroke:none" class="cell_$neg$rtl/takum_hdr_dec.v:51$13">Y</text>
+    <g transform="translate(30,10)" s:x="30" s:y="10" s:pid="out0" id="port_$neg$rtl/takum_hdr_dec.v:30$13~Y">
+      <text x="5" y="-4" style="fill:#000; stroke:none" class="cell_$neg$rtl/takum_hdr_dec.v:30$13">Y</text>
     </g>
   </g>
-  <g s:type="not" transform="translate(141,12.5)" s:width="30" s:height="20" id="cell_$not$rtl/takum_hdr_dec.v:37$1">
+  <g s:type="not" transform="translate(141,12.5)" s:width="30" s:height="20" id="cell_$not$rtl/takum_hdr_dec.v:16$1">
     <s:alias val="$_NOT_"/>
     <s:alias val="$not"/>
     <s:alias val="$logic_not"/>
-    <path d="M0,0 L0,20 L20,10 Z" class="cell_$not$rtl/takum_hdr_dec.v:37$1"/>
-    <circle cx="23" cy="10" r="3" class="cell_$not$rtl/takum_hdr_dec.v:37$1"/>
+    <path d="M0,0 L0,20 L20,10 Z" class="cell_$not$rtl/takum_hdr_dec.v:16$1"/>
+    <circle cx="23" cy="10" r="3" class="cell_$not$rtl/takum_hdr_dec.v:16$1"/>
     <g s:x="0" s:y="10" s:pid="A"/>
     <g s:x="25" s:y="10" s:pid="Y"/>
   </g>
-  <g s:type="not" transform="translate(557,162.5)" s:width="30" s:height="20" id="cell_$not$rtl/takum_hdr_dec.v:48$9">
+  <g s:type="not" transform="translate(557,162.5)" s:width="30" s:height="20" id="cell_$not$rtl/takum_hdr_dec.v:27$9">
     <s:alias val="$_NOT_"/>
     <s:alias val="$not"/>
     <s:alias val="$logic_not"/>
-    <path d="M0,0 L0,20 L20,10 Z" class="cell_$not$rtl/takum_hdr_dec.v:48$9"/>
-    <circle cx="23" cy="10" r="3" class="cell_$not$rtl/takum_hdr_dec.v:48$9"/>
+    <path d="M0,0 L0,20 L20,10 Z" class="cell_$not$rtl/takum_hdr_dec.v:27$9"/>
+    <circle cx="23" cy="10" r="3" class="cell_$not$rtl/takum_hdr_dec.v:27$9"/>
     <g s:x="0" s:y="10" s:pid="A"/>
     <g s:x="25" s:y="10" s:pid="Y"/>
   </g>
-  <g s:type="or" transform="translate(687,187.5)" s:width="30" s:height="25" id="cell_$or$rtl/takum_hdr_dec.v:47$8">
+  <g s:type="or" transform="translate(687,187.5)" s:width="30" s:height="25" id="cell_$or$rtl/takum_hdr_dec.v:26$8">
     <s:alias val="$or"/>
     <s:alias val="$logic_or"/>
     <s:alias val="$_OR_"/>
-    <path d="M0,25 L0,25 L15,25 A15 12.5 0 0 0 15,0 L0,0" class="cell_$or$rtl/takum_hdr_dec.v:47$8"/>
-    <path d="M0,0 A30 25 0 0 1 0,25" class="cell_$or$rtl/takum_hdr_dec.v:47$8"/>
+    <path d="M0,25 L0,25 L15,25 A15 12.5 0 0 0 15,0 L0,0" class="cell_$or$rtl/takum_hdr_dec.v:26$8"/>
+    <path d="M0,0 A30 25 0 0 1 0,25" class="cell_$or$rtl/takum_hdr_dec.v:26$8"/>
     <g s:x="3" s:y="5" s:pid="A"/>
     <g s:x="3" s:y="20" s:pid="B"/>
     <g s:x="30" s:y="12.5" s:pid="Y"/>
   </g>
-  <g s:type="or" transform="translate(687,75)" s:width="30" s:height="25" id="cell_$or$rtl/takum_hdr_dec.v:48$11">
+  <g s:type="or" transform="translate(687,75)" s:width="30" s:height="25" id="cell_$or$rtl/takum_hdr_dec.v:27$11">
     <s:alias val="$or"/>
     <s:alias val="$logic_or"/>
     <s:alias val="$_OR_"/>
-    <path d="M0,25 L0,25 L15,25 A15 12.5 0 0 0 15,0 L0,0" class="cell_$or$rtl/takum_hdr_dec.v:48$11"/>
-    <path d="M0,0 A30 25 0 0 1 0,25" class="cell_$or$rtl/takum_hdr_dec.v:48$11"/>
+    <path d="M0,25 L0,25 L15,25 A15 12.5 0 0 0 15,0 L0,0" class="cell_$or$rtl/takum_hdr_dec.v:27$11"/>
+    <path d="M0,0 A30 25 0 0 1 0,25" class="cell_$or$rtl/takum_hdr_dec.v:27$11"/>
     <g s:x="3" s:y="5" s:pid="A"/>
     <g s:x="3" s:y="20" s:pid="B"/>
     <g s:x="30" s:y="12.5" s:pid="Y"/>
   </g>
-  <g s:type="generic" transform="translate(348,69.5)" s:width="30" s:height="40" id="cell_$shl$rtl/takum_hdr_dec.v:43$5">
-    <text x="15" y="-4" class="nodelabel cell_$shl$rtl/takum_hdr_dec.v:43$5" s:attribute="ref">$shl</text>
-    <rect width="30" height="40" s:generic="body" class="cell_$shl$rtl/takum_hdr_dec.v:43$5"/>
-    <g transform="translate(0,10)" s:x="0" s:y="10" s:pid="in0" id="port_$shl$rtl/takum_hdr_dec.v:43$5~A">
-      <text x="-3" y="-4" class="inputPortLabel cell_$shl$rtl/takum_hdr_dec.v:43$5">A</text>
+  <g s:type="generic" transform="translate(348,69.5)" s:width="30" s:height="40" id="cell_$shl$rtl/takum_hdr_dec.v:23$7">
+    <text x="15" y="-4" class="nodelabel cell_$shl$rtl/takum_hdr_dec.v:23$7" s:attribute="ref">$shl</text>
+    <rect width="30" height="40" s:generic="body" class="cell_$shl$rtl/takum_hdr_dec.v:23$7"/>
+    <g transform="translate(0,10)" s:x="0" s:y="10" s:pid="in0" id="port_$shl$rtl/takum_hdr_dec.v:23$7~A">
+      <text x="-3" y="-4" class="inputPortLabel cell_$shl$rtl/takum_hdr_dec.v:23$7">A</text>
     </g>
-    <g transform="translate(0,30)" s:x="0" s:y="10" s:pid="in0" id="port_$shl$rtl/takum_hdr_dec.v:43$5~B">
-      <text x="-3" y="-4" class="inputPortLabel cell_$shl$rtl/takum_hdr_dec.v:43$5">B</text>
+    <g transform="translate(0,30)" s:x="0" s:y="10" s:pid="in0" id="port_$shl$rtl/takum_hdr_dec.v:23$7~B">
+      <text x="-3" y="-4" class="inputPortLabel cell_$shl$rtl/takum_hdr_dec.v:23$7">B</text>
     </g>
-    <g transform="translate(30,10)" s:x="30" s:y="10" s:pid="out0" id="port_$shl$rtl/takum_hdr_dec.v:43$5~Y">
-      <text x="5" y="-4" style="fill:#000; stroke:none" class="cell_$shl$rtl/takum_hdr_dec.v:43$5">Y</text>
-    </g>
-  </g>
-  <g s:type="generic" transform="translate(348,162)" s:width="30" s:height="40" id="cell_$shr$rtl/takum_hdr_dec.v:40$4">
-    <text x="15" y="-4" class="nodelabel cell_$shr$rtl/takum_hdr_dec.v:40$4" s:attribute="ref">$shr</text>
-    <rect width="30" height="40" s:generic="body" class="cell_$shr$rtl/takum_hdr_dec.v:40$4"/>
-    <g transform="translate(0,10)" s:x="0" s:y="10" s:pid="in0" id="port_$shr$rtl/takum_hdr_dec.v:40$4~A">
-      <text x="-3" y="-4" class="inputPortLabel cell_$shr$rtl/takum_hdr_dec.v:40$4">A</text>
-    </g>
-    <g transform="translate(0,30)" s:x="0" s:y="10" s:pid="in0" id="port_$shr$rtl/takum_hdr_dec.v:40$4~B">
-      <text x="-3" y="-4" class="inputPortLabel cell_$shr$rtl/takum_hdr_dec.v:40$4">B</text>
-    </g>
-    <g transform="translate(30,10)" s:x="30" s:y="10" s:pid="out0" id="port_$shr$rtl/takum_hdr_dec.v:40$4~Y">
-      <text x="5" y="-4" style="fill:#000; stroke:none" class="cell_$shr$rtl/takum_hdr_dec.v:40$4">Y</text>
+    <g transform="translate(30,10)" s:x="30" s:y="10" s:pid="out0" id="port_$shl$rtl/takum_hdr_dec.v:23$7~Y">
+      <text x="5" y="-4" style="fill:#000; stroke:none" class="cell_$shl$rtl/takum_hdr_dec.v:23$7">Y</text>
     </g>
   </g>
-  <g s:type="sub" transform="translate(272.6666666666667,208.5)" s:width="25" s:height="25" id="cell_$sub$rtl/takum_hdr_dec.v:40$3">
+  <g s:type="generic" transform="translate(348,162)" s:width="30" s:height="40" id="cell_$shr$rtl/takum_hdr_dec.v:19$4">
+    <text x="15" y="-4" class="nodelabel cell_$shr$rtl/takum_hdr_dec.v:19$4" s:attribute="ref">$shr</text>
+    <rect width="30" height="40" s:generic="body" class="cell_$shr$rtl/takum_hdr_dec.v:19$4"/>
+    <g transform="translate(0,10)" s:x="0" s:y="10" s:pid="in0" id="port_$shr$rtl/takum_hdr_dec.v:19$4~A">
+      <text x="-3" y="-4" class="inputPortLabel cell_$shr$rtl/takum_hdr_dec.v:19$4">A</text>
+    </g>
+    <g transform="translate(0,30)" s:x="0" s:y="10" s:pid="in0" id="port_$shr$rtl/takum_hdr_dec.v:19$4~B">
+      <text x="-3" y="-4" class="inputPortLabel cell_$shr$rtl/takum_hdr_dec.v:19$4">B</text>
+    </g>
+    <g transform="translate(30,10)" s:x="30" s:y="10" s:pid="out0" id="port_$shr$rtl/takum_hdr_dec.v:19$4~Y">
+      <text x="5" y="-4" style="fill:#000; stroke:none" class="cell_$shr$rtl/takum_hdr_dec.v:19$4">Y</text>
+    </g>
+  </g>
+  <g s:type="sub" transform="translate(272.6666666666667,208.5)" s:width="25" s:height="25" id="cell_$sub$rtl/takum_hdr_dec.v:19$3">
     <s:alias val="$sub"/>
-    <circle r="12.5" cx="12.5" cy="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:40$3"/>
-    <line x1="7.5" x2="17.5" y1="12.5" y2="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:40$3"/>
+    <circle r="12.5" cx="12.5" cy="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:19$3"/>
+    <line x1="7.5" x2="17.5" y1="12.5" y2="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:19$3"/>
     <g s:x="3" s:y="5" s:pid="A"/>
     <g s:x="3" s:y="20" s:pid="B"/>
     <g s:x="25" s:y="12.5" s:pid="Y"/>
   </g>
-  <g s:type="sub" transform="translate(558.6666666666666,102.5)" s:width="25" s:height="25" id="cell_$sub$rtl/takum_hdr_dec.v:43$6">
+  <g s:type="sub" transform="translate(558.6666666666666,102.5)" s:width="25" s:height="25" id="cell_$sub$rtl/takum_hdr_dec.v:22$6">
     <s:alias val="$sub"/>
-    <circle r="12.5" cx="12.5" cy="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:43$6"/>
-    <line x1="7.5" x2="17.5" y1="12.5" y2="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:43$6"/>
+    <circle r="12.5" cx="12.5" cy="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:22$6"/>
+    <line x1="7.5" x2="17.5" y1="12.5" y2="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:22$6"/>
     <g s:x="3" s:y="5" s:pid="A"/>
     <g s:x="3" s:y="20" s:pid="B"/>
     <g s:x="25" s:y="12.5" s:pid="Y"/>
   </g>
-  <g s:type="sub" transform="translate(808.3333333333334,195)" s:width="25" s:height="25" id="cell_$sub$rtl/takum_hdr_dec.v:50$12">
+  <g s:type="sub" transform="translate(808.3333333333334,195)" s:width="25" s:height="25" id="cell_$sub$rtl/takum_hdr_dec.v:29$12">
     <s:alias val="$sub"/>
-    <circle r="12.5" cx="12.5" cy="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:50$12"/>
-    <line x1="7.5" x2="17.5" y1="12.5" y2="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:50$12"/>
+    <circle r="12.5" cx="12.5" cy="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:29$12"/>
+    <line x1="7.5" x2="17.5" y1="12.5" y2="12.5" class="cell_$sub$rtl/takum_hdr_dec.v:29$12"/>
     <g s:x="3" s:y="5" s:pid="A"/>
     <g s:x="3" s:y="20" s:pid="B"/>
     <g s:x="25" s:y="12.5" s:pid="Y"/>
   </g>
-  <g s:type="mux" transform="translate(209.33333333333334,12.5)" s:width="20" s:height="40" id="cell_$ternary$rtl/takum_hdr_dec.v:37$2">
+  <g s:type="mux" transform="translate(209.33333333333334,12.5)" s:width="20" s:height="40" id="cell_$ternary$rtl/takum_hdr_dec.v:16$2">
     <s:alias val="$pmux"/>
     <s:alias val="$mux"/>
     <s:alias val="$_MUX_"/>
-    <path d="M0,0 L20,10 L20,30 L0,40 Z" class="cell_$ternary$rtl/takum_hdr_dec.v:37$2"/>
+    <path d="M0,0 L20,10 L20,30 L0,40 Z" class="cell_$ternary$rtl/takum_hdr_dec.v:16$2"/>
     <g s:x="0" s:y="10" s:pid="A"/>
     <g s:x="0" s:y="30" s:pid="B"/>
     <g s:x="10" s:y="35" s:pid="S"/>
     <g s:x="20" s:y="20" s:pid="Y"/>
   </g>
-  <g s:type="mux" transform="translate(974,77.5)" s:width="20" s:height="40" id="cell_$ternary$rtl/takum_hdr_dec.v:50$14">
+  <g s:type="mux" transform="translate(974,77.5)" s:width="20" s:height="40" id="cell_$ternary$rtl/takum_hdr_dec.v:29$14">
     <s:alias val="$pmux"/>
     <s:alias val="$mux"/>
     <s:alias val="$_MUX_"/>
-    <path d="M0,0 L20,10 L20,30 L0,40 Z" class="cell_$ternary$rtl/takum_hdr_dec.v:50$14"/>
+    <path d="M0,0 L20,10 L20,30 L0,40 Z" class="cell_$ternary$rtl/takum_hdr_dec.v:29$14"/>
     <g s:x="0" s:y="10" s:pid="A"/>
     <g s:x="0" s:y="30" s:pid="B"/>
     <g s:x="10" s:y="35" s:pid="S"/>

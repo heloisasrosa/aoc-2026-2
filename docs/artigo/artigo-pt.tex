@@ -1,0 +1,562 @@
+% Projeto Integrador AOC 2026/02 --- artigo final, versão em português (formato IEEE)
+% É a tradução de artigo.tex; os números vêm de numbers-pt.tex (vírgula decimal).
+% Compilar: latexmk -pdf artigo-pt.tex     (ou, na raiz do repositório: make paper)
+\documentclass[conference]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\res}{../../results}
+\newcommand{\cdf}[3][]{\addplot+[no markers, #1] table[x=err, y=frac] {\res/cdf_#2_#3.dat};}
+
+\input{numbers-pt}
+\newcommand{\matplot}[2][]{%
+  \nextgroupplot[title={#2}, #1]
+  \cdf[blue!75!black]{#2}{T8}    \cdf[blue!75!black, dashed]{#2}{FP8w}
+  \cdf[red!75!black]{#2}{T16}    \cdf[red!75!black, dashed]{#2}{FP16w}
+  \cdf[green!45!black]{#2}{T32}  \cdf[green!45!black, dashed]{#2}{FP32w}}
+
+\renewcommand{\IEEEkeywordsname}{Palavras-chave}
+
+\begin{document}
+
+\title{Zvtakum: Aritmética Takum na Extensão Vetorial RISC-V\\
+{\large Caminho de Dados em RTL, Simulação em Nível de Instrução e Avaliação em Álgebra Linear Esparsa}}
+
+\author{\IEEEauthorblockN{Heloisa Silva Rosa, Samantha Kelly de Souza Sena e Vitor Hugo Lacerda Lana}
+\IEEEauthorblockA{Departamento de Engenharia Eletrônica (DELT), Universidade Federal de Minas Gerais\\
+Belo Horizonte, MG, Brasil}}
+
+\maketitle
+
+\begin{abstract}
+Os conjuntos de instruções vetoriais continuam acrescentando formatos de baixa precisão no estilo
+IEEE~754, cada um com sua lógica de decodificação, seus casos de exceção e seu estado de controle. A
+aritmética takum é uma alternativa de precisão afunilada cujo cabeçalho é decodificado a partir de, no
+máximo, 12 bits em qualquer largura. Apresentamos a Zvtakum, uma extensão takum simplificada para a
+extensão vetorial do RISC-V, com cinco instruções (\code{vtadd.vv}, \code{vtsub.vv}, \code{vtmul.vv},
+\code{vtdot.vv}, \code{vncvt.t.t}) para elementos de 8, 16 e 32 bits. Descrevemos um caminho de dados em
+Verilog, verificado contra um oráculo racional exato (exaustivamente em 8 bits), e um simulador em nível
+de instrução que executa as instruções codificadas junto com um subconjunto do RVV. No produto de matriz
+esparsa por vetor com nove matrizes, cinco delas do repositório público Matrix Market e uma com 17\,758
+linhas, comparado com uma referência
+em binary128, os takums de 32 bits têm o menor erro relativo mediano em todos os casos, até 11 vezes menor
+que o do binary32 com a mesma precisão de acúmulo; os de 16 bits ganham com dados próximos da escala
+unitária, perdem em faixas moderadamente largas e permanecem finitos onde o binary16 estoura; e os de 8
+bits são menos precisos que um ponto flutuante de 8 bits com dados dentro da faixa, mas nunca estouram,
+enquanto o ponto flutuante devolve infinitos ou NaN em 11\% a 100\% das linhas de quatro matrizes. A instrução de produto escalar fundido
+elimina de 8 a 14\% das instruções executadas em relação ao núcleo IEEE equivalente com alargamento, e a
+extensão dispensa o registrador de controle e status de ponto flutuante.
+\end{abstract}
+
+\begin{IEEEkeywords}
+aritmética takum, RISC-V, extensão vetorial, aritmética computacional, álgebra linear esparsa
+\end{IEEEkeywords}
+
+%======================================================================
+\section{Introdução}
+
+As unidades SIMD (\emph{single instruction, multiple data}) e vetoriais foram projetadas em torno do
+binary32 e do binary64. As cargas de aprendizado de máquina as empurraram para formatos mais estreitos:
+binary16, bfloat16 e, mais recentemente, os formatos de 8 bits E4M3 e E5M2~\cite{ofp8}. Cada um tem uma
+largura de expoente diferente, um tratamento diferente de infinitos e NaN e, às vezes, uma regra de
+saturação diferente; um conjunto de instruções que suporte todos acumula instruções de conversão, casos
+especiais e lógica de exceção~\cite{hunhold2025avx}.
+
+A aritmética takum~\cite{hunhold2024takum} substitui essa família por um único formato de precisão
+afunilada, definido para qualquer largura $n$. Os campos de sinal, direção, regime e característica cabem
+sempre nos 12 bits mais significativos, a faixa dinâmica é de cerca de $2^{\pm 239}$ já em 8 bits e de $2^{\pm 255}$ a partir de 12, há uma
+única representação do zero e um único valor excepcional (NaR), e os padrões de bits são ordenados como
+inteiros em complemento de dois.
+
+Este trabalho avalia o que isso significa para um conjunto de instruções vetoriais. As contribuições são:
+\begin{itemize}
+  \item um caminho de dados combinacional em Verilog para takums lineares (decodificador, codificador,
+        ALU de soma, subtração e multiplicação, multiplicador com alargamento, conversão com redução de
+        largura e uma unidade vetorial), parametrizado para T8, T16 e T32;
+  \item a Zvtakum, uma codificação e uma semântica para cinco instruções vetoriais takum que espelham
+        instruções de ponto flutuante do RVV, incluindo um produto escalar fundido com acúmulo em
+        precisão ampliada;
+  \item um simulador em nível de instrução de RV64I, de um subconjunto do RVV~1.0 e da Zvtakum,
+        conferido contra os vetores de teste do RTL;
+  \item uma comparação experimental com formatos no estilo IEEE~754 no produto de matriz esparsa por
+        vetor: erro relativo contra binary128, instruções executadas e requisitos de estado de controle.
+\end{itemize}
+Todo o código, os testes e os dados estão no repositório do projeto e são reproduzidos por
+\code{make test} e \code{make bench}.
+
+%======================================================================
+\section{Trabalhos Relacionados}
+
+Os posits~\cite{gustafson2017} introduziram a precisão afunilada com um regime de comprimento variável e
+foram depois padronizados~\cite{positstd}. O regime de um posit pode consumir a palavra inteira, o que faz
+a faixa dinâmica depender de $n$ e o decodificador depender de uma contagem de bits à esquerda na largura
+total. Os takums~\cite{hunhold2024takum} limitam o regime a três bits e a característica a sete, de modo
+que o expoente é sempre recuperado de um cabeçalho fixo de 12 bits; um codec em VHDL construído sobre
+essa propriedade é descrito em~\cite{hunhold2024codec}.
+
+Hunhold~\cite{hunhold2025avx} estudou o Intel AVX10.2 e mostrou que substituir seus formatos derivados do
+IEEE por takums remove ou generaliza grande parte do conjunto de instruções, pois comparações, manipulação
+de sinal e conversões entre larguras se reduzem a operações inteiras. Nosso trabalho faz a mesma pergunta
+para a extensão vetorial do RISC-V~\cite{rvv}, em escala menor, e acrescenta uma implementação. No lado
+numérico, os takums já foram comparados com bfloat16 e posits em solucionadores lineares
+esparsos~\cite{hunhold2025solvers}; usamos o mesmo tipo de experimento (erro contra uma referência de alta
+precisão), restrito ao produto matriz--vetor, com matrizes sintéticas e com matrizes do
+repositório Matrix Market~\cite{boisvert1997}, a maioria da coleção Harwell-Boeing~\cite{duff1989}.
+
+%======================================================================
+\section{Formato Takum}
+
+Usamos o takum linear~\cite{hunhold2024takum}. Uma palavra de $n$ bits contém um sinal $S$, um bit de
+direção $D$, um regime $R$ de 3 bits, uma característica $C$ de $r$ bits e uma fração $F$ de $p=n-5-r$
+bits, com
+\begin{equation}
+r=\begin{cases}R & D=1\\ 7-R & D=0\end{cases}\qquad
+c=\begin{cases}2^{r}-1+C & D=1\\ -2^{r+1}+1+C & D=0\end{cases}
+\end{equation}
+e, para uma palavra positiva, $x=(1+f)\,2^{c}$ com $f=2^{-p}F$. Os valores negativos são o complemento de
+dois da palavra. O padrão $0\cdots0$ é o zero e $10\cdots0$ é o NaR. A característica $c$ vai de $-255$ a
+$254$. A precisão é afunilada: valores próximos de 1 têm $r=0$ e $n-5$ bits de fração; as maiores
+magnitudes têm $r=7$ e $n-12$. A Tabela~\ref{tab:formats} compara os bits de fração com os dos formatos
+no estilo IEEE usados neste artigo.
+
+\begin{table}[t]
+\caption{Bits de fração e maior expoente finito de cada formato.}
+\label{tab:formats}
+\centering
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Formato & $n$ & Bits de fração & Expoente máx.\\
+\midrule
+T8, T16, T32 & 8, 16, 32 & $n-5-r$,\; $0\le r\le 7$ & 239, 254, 254\\
+FP8 (E4M3) & 8 & 3 & 7\\
+FP16 (binary16) & 16 & 10 & 15\\
+FP32 (binary32) & 32 & 23 & 127\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%======================================================================
+\section{Arquitetura Proposta}
+
+\subsection{Caminho de dados escalar}
+
+Toda operação é \emph{decodificar $\rightarrow$ núcleo $\rightarrow$ codificar}. O decodificador nega
+condicionalmente a palavra, lê o cabeçalho de 12 bits com um bloco fixo (\code{takum\_hdr\_dec},
+compartilhado por todas as larguras) e alinha a fração à esquerda com um único deslocador. O núcleo opera
+sobre sinal, um expoente de 9 bits e um significando: a multiplicação soma os expoentes e multiplica os
+significandos; a soma ordena os operandos por magnitude, alinha o menor preservando os bits de guarda,
+arredondamento e \emph{sticky}, soma ou subtrai e normaliza. O codificador reconstrói o cabeçalho, anexa a
+fração e arredonda \emph{na palavra}: como os takums são monótonos no padrão de bits, somar um à palavra
+truncada leva ao próximo valor representável, inclusive ao cruzar fronteiras de regime. O arredondamento é
+para o mais próximo, com empate para o par, e um resultado não nulo satura em vez de virar zero ou NaR.
+
+\subsection{Instruções da Zvtakum}
+
+A Tabela~\ref{tab:isa} lista as instruções. Elas usam o layout de campos do OP-V
+(\code{funct6 | vm | vs2 | vs1 | funct3 | vd | opcode}) no opcode principal \emph{custom-2}, com o
+\code{funct6} da instrução de ponto flutuante que substituem, de modo que o decodificador de um núcleo
+RVV pode ser compartilhado. A largura do elemento, o comprimento do vetor e a máscara vêm dos já
+existentes \code{vtype}, \code{vl} e \code{v0}; a extensão não acrescenta estado.
+
+\begin{table}[t]
+\caption{Instruções da Zvtakum. SEW é 8, 16 ou 32.}
+\label{tab:isa}
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+Instrução & \code{funct6} & Operação ($i<\mathit{vl}$, não mascarado)\\
+\midrule
+\code{vtadd.vv} & \code{000000} & $vd_i = vs2_i + vs1_i$\\
+\code{vtsub.vv} & \code{000010} & $vd_i = vs2_i - vs1_i$\\
+\code{vtmul.vv} & \code{100100} & $vd_i = vs2_i \times vs1_i$\\
+\code{vtdot.vv} & \code{111001} & $vd_0^{(2\mathrm{SEW})} \mathrel{+}= \sum_i vs2_i \times vs1_i$\\
+\code{vncvt.t.t} & \code{010010} & $vd_i = \mathrm{arred}_{\mathrm{SEW}}\bigl(vs2_i^{(2\mathrm{SEW})}\bigr)$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph*{Redução de largura} Nos formatos IEEE, estreitar exige refazer o viés do expoente, tratar
+subnormais e detectar estouro. Um takum de $2n$ bits é estreitado arredondando sua cadeia de bits para $n$
+bits: o cabeçalho fica no topo da palavra em qualquer largura. O \code{takum\_ncvt} é um incrementador e
+um teste de saturação, sem decodificador.
+
+\paragraph*{Produto escalar com acúmulo ampliado} O \code{vtdot.vv} (Fig.~\ref{fig:dot}) multiplica os
+elementos de SEW bits em takums de $2\,$SEW bits e os acumula, na ordem dos elementos, no elemento 0 de
+\code{vd}, também em $2\,$SEW. O produto de dois significandos de $n-4$ bits tem $2n-8$ bits e sempre cabe
+na fração de um takum de $2n$ bits, de modo que o multiplicador com alargamento (\code{takum\_wmul}) é
+exato, salvo quando o expoente satura; conferimos isso para todos os $2^{16}$ pares de T8. O
+arredondamento ocorre apenas nas somas, em largura dupla, e uma vez mais no \code{vncvt.t.t} final. Como o
+acumulador é lido de \code{vd}, um laço com \code{vsetvli} não precisa de redução separada nem de
+movimentação escalar.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=0.92cm, font=\footnotesize, >={Latex[length=1.6mm]},
+  blk/.style={draw, rounded corners=1.5pt, minimum height=6.5mm, minimum width=13mm, align=center}]
+  \foreach \i/\x in {0/0, 1/2.1, 2/4.9} {
+    \node[blk] (m\i) at (\x, 0) {wmul};
+    \node[blk] (a\i) at (\x,-1.25) {soma$_{2n}$};
+    \draw[->] (m\i) -- (a\i);
+  }
+  \node at (3.5, 0) {$\cdots$}; \node at (3.5,-1.25) {$\cdots$};
+  \node (in0) at (0, 0.95) {$a_0\; b_0$}; \node (in1) at (2.1, 0.95) {$a_1\; b_1$};
+  \node (in2) at (4.9, 0.95) {$a_{k-1}\; b_{k-1}$};
+  \foreach \i in {0,1,2} \draw[->] (in\i) -- (m\i);
+  \node (acc) at (-1.5,-1.25) {$vd_0$};
+  \draw[->] (acc) -- (a0); \draw[->] (a0) -- (a1);
+  \draw[->] (a1) -- (2.95,-1.25); \draw[->] (4.05,-1.25) -- (a2);
+  \node[blk] (nc) at (6.75,-1.25) {ncvt};
+  \draw[->] (a2) -- node[above] {$2n$} (nc);
+  \node (y) at (6.75,-2.2) {$n$ bits};
+  \draw[->] (nc) -- (y);
+  \node[align=center, text=black!60] at (2.45,-2.05) {\scriptsize a pista é contornada se $i\ge \mathit{vl}$ ou mascarada};
+\end{tikzpicture}
+\caption{Caminho de dados do \code{vtdot.vv} para $k$ pistas de elementos de $n$ bits, seguido do
+\code{vncvt.t.t}. Os produtos são exatos em $2n$ bits; só as somas arredondam.}
+\label{fig:dot}
+\end{figure}
+
+\subsection{Unidade vetorial e simulador}
+
+A unidade vetorial \code{takum\_vec\_alu} (parâmetro VLEN, 64 por padrão) instancia uma fileira de ALUs
+por largura de elemento e seleciona pela SEW. Os elementos com $i\ge \mathit{vl}$ e os mascarados mantêm o
+valor antigo do destino. Ela é combinacional; uma implementação com \emph{pipeline} registraria entre os
+três estágios e compartilharia os multiplicadores do \code{vtmul.vv} e do \code{vtdot.vv}.
+
+Para executar programas inteiros, escrevemos um simulador em nível de instrução em Python. Ele monta um
+pequeno subconjunto de RV64I, as instruções do RVV de configuração, carga e armazenamento, carga indexada
+e ponto flutuante usadas pelos núcleos, e a Zvtakum; a máquina busca palavras de 32 bits, decodifica,
+executa e conta as instruções executadas. Os formatos IEEE~754~\cite{ieee754} são modelados por um formato
+binário genérico corretamente arredondado (subnormais, infinitos, NaN e os cinco \code{fflags}); o zero
+negativo não é modelado. As operações takum chamam o mesmo oráculo que verifica o RTL.
+
+%======================================================================
+\section{Resultados e Discussão}
+
+\subsection{Verificação}
+
+O RTL é comparado com um oráculo que decodifica os takums pela fórmula completa e calcula em aritmética
+racional exata, sem compartilhar código nem método com o hardware. A Tabela~\ref{tab:verif} resume a suíte
+de testes; todos passam. Para conferir que os testes são sensíveis, injetamos 13 defeitos (por exemplo,
+descartar o bit \emph{sticky}, omitir a regra de empate para o par na redução de largura, acumular o
+produto escalar em ordem inversa, ignorar a máscara); todos foram detectados. O oráculo, por sua vez, foi comparado com a libtakum~\cite{libtakum}, a
+implementação de referência do autor do formato: 826\,987 vetores coincidem bit a bit, e 16 produtos em T32
+diferem no último bit porque a libtakum multiplica em binary64, que não comporta o produto de 56 bits; nos
+16, o resultado exato está mais perto do nosso. O simulador é conferido
+contra a aritmética nativa em binary16/32/64 (160\,000 casos) e executa os 15\,000 vetores de teste da
+unidade vetorial como instruções codificadas, com resultados idênticos.
+
+\begin{table}[t]
+\caption{Verificação do RTL contra o oráculo exato.}
+\label{tab:verif}
+\centering
+\begin{tabular}{@{}lr@{}}
+\toprule
+Teste & Vetores\\
+\midrule
+Decodificador, codificador, ida e volta (T8/T16 exaustivos) & 855\,408\\
+ALU T8: todos os pares $\times$ soma, subtração, produto & 196\,608\\
+ALU T16, T32: bordas, vizinhos, aleatórios (cada) & 109\,923\\
+Redução T16$\to$T8 (todas as palavras), T32$\to$T16, T64$\to$T32 & 105\,794\\
+Produto alargado T8 (todos os pares), T16, T32 & 138\,818\\
+Unidade vetorial, 5 instruções, \code{vl} e máscara (por SEW) & 5\,000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Custo de hardware}
+
+A Tabela~\ref{tab:hw} traz uma síntese independente de tecnologia (Yosys, mapeamento em LUTs de 6
+entradas). Os números servem para comparar os blocos entre si, não como área absoluta. O decodificador do
+cabeçalho custa \HWHDR{} LUTs em qualquer largura. A conversão com redução de largura é menor que um
+decodificador, o que confirma que ela é apenas um arredondamento da palavra. O multiplicador com
+alargamento é mais barato que a ALU completa porque não tem deslocador de alinhamento nem de normalização;
+em 32 bits o multiplicador $28\times28$ domina ambos. O \code{vtdot.vv} combinacional é o maior bloco,
+pois cada pista carrega um somador de largura dupla; um projeto preocupado com área iteraria um único
+somador sobre as pistas.
+
+\begin{table}[t]
+\caption{Resultados de síntese em LUT6 (Yosys, genérica).}
+\label{tab:hw}
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Bloco & T8 & T16 & T32\\
+\midrule
+Decodificador & \HWDECA & \HWDECB & \HWDECC\\
+Codificador & \HWENCA & \HWENCB & \HWENCC\\
+ALU (soma, subtração, produto) & \HWALUA & \HWALUB & \HWALUC\\
+Redução para esta largura (\code{vncvt.t.t}) & \HWNCA & \HWNCB & \HWNCC\\
+Multiplicador com alargamento & \HWWMA & \HWWMB & \HWWMC\\
+\code{vtdot.vv}, vetor de 64 bits (8/4/2 pistas) & \HWDOTA & \HWDOTB & \HWDOTC\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Exatidão do produto de matriz esparsa por vetor}
+
+Calculamos $y=Ax$ para as nove matrizes da Tabela~\ref{tab:mats}, em formato CSR. Quatro são geradas:
+\emph{poisson} é o Laplaciano de 5 pontos em uma malha $16\times16$ aplicado a um modo suave, com forte
+cancelamento em todas as linhas; \emph{gauss} é esparsa aleatória com entradas $\mathcal{N}(0,1)$;
+\emph{wide} tem a mesma estrutura, com magnitudes log-uniformes; e \emph{mlp} é uma camada densa podada
+(90\% de zeros, pesos $\mathcal{N}(0,2/\mathrm{fan\_in})$) aplicada a ativações pós-ReLU, um núcleo típico
+de aprendizado de máquina. Quatro são problemas reais da coleção Harwell-Boeing~\cite{duff1989}, obtidos
+do Matrix Market~\cite{boisvert1997}: \emph{nos4} (análise estrutural de uma viga), \emph{bus494}
+(\code{494\_bus}, matriz de admitância de uma rede elétrica de 494 barras), \emph{west0479} (engenharia
+química, uma coluna de destilação) e \emph{bcsstk05} (matriz de rigidez estrutural). Uma quinta matriz real
+do mesmo repositório, \emph{memplus} (simulação de um circuito de memória de computador), tem 17\,758
+linhas, 36 vezes a maior das demais, e entradas tão pequenas quanto $2^{-86}$. Para as
+matrizes reais, $x$ é sorteado de $\mathcal{N}(0,1)$. Os dados ficam em binary64, são arredondados para cada
+formato e multiplicados pelo núcleo em assembly no simulador. A referência é o mesmo produto calculado em
+binary128 a partir dos dados não arredondados, e a métrica é o erro relativo de cada linha.
+
+\begin{table}[t]
+\caption{Matrizes de teste. Acima: geradas; abaixo: Matrix Market.}
+\label{tab:mats}
+\centering
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lcrrc@{}}
+\toprule
+Matriz & Dimensão & Não nulos & Por linha & Faixa de $|a_{ij}|$\\
+\midrule
+\MATTABLE
+\bottomrule
+\end{tabular}
+\end{table}
+
+Três núcleos são comparados: \emph{T}$n$ usa \code{vtdot.vv} e \code{vncvt.t.t}; \emph{FP}$n$ usa
+\code{vfmul.vv} e \code{vfredosum.vs} em SEW, a formulação usual em RVV; e \emph{FP}$n$\emph{w} usa
+\code{vfwmul.vv}, uma soma ordenada em $2\,$SEW e \code{vfncvt.f.f.w}, o que dá ao IEEE o mesmo acúmulo
+ampliado do \code{vtdot.vv}. A Tabela~\ref{tab:err} traz o erro mediano e a Fig.~\ref{fig:cdf}, as
+distribuições acumuladas.
+
+\begin{table*}[t]
+\caption{Erro relativo mediano de $y=Ax$ contra binary128. Negrito: o melhor de cada largura. $\infty$: mais
+da metade das linhas não é finita.}
+\label{tab:err}
+\centering
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}lccccccccc@{}}
+\toprule
+Núcleo & poisson & gauss & wide & mlp & nos4 & bus494 & west0479 & bcsstk05 & memplus\\
+\midrule
+\ERRTABLE
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+  group style={group size=5 by 2, horizontal sep=4mm, vertical sep=11mm, ylabels at=edge left,
+               yticklabels at=edge left, xlabels at=edge bottom},
+  width=0.232\textwidth, height=36mm,
+  xmode=log, xmin=1e-10, xmax=1e2, ymin=0, ymax=1,
+  xtick={1e-10,1e-8,1e-6,1e-4,1e-2,1e0,1e2},
+  xticklabels={,$10^{-8}$,,$10^{-4}$,,$10^{0}$,},
+  yticklabels={,0,{0,2},{0,4},{0,6},{0,8},1},
+  xlabel={erro relativo}, ylabel={fração das linhas},
+  grid=major, grid style={black!12},
+  tick label style={font=\scriptsize}, label style={font=\footnotesize}, title style={font=\footnotesize, yshift=-1.5mm},
+  cycle list={}, every axis plot/.append style={line width=0.8pt},
+  legend style={font=\scriptsize, legend columns=6, /tikz/every even column/.append style={column sep=3mm}}]
+\matplot{poisson}
+\matplot{gauss}
+\matplot{wide}
+\matplot{mlp}
+\matplot{nos4}
+\matplot{bus494}
+\matplot{west0479}
+\matplot{bcsstk05}
+\matplot[legend to name=cdfleg]{memplus}
+\legend{T8, FP8w, T16, FP16w, T32, FP32w}
+\end{groupplot}
+\end{tikzpicture}\\[1.5mm]
+\pgfplotslegendfromname{cdfleg}
+\caption{Distribuição acumulada do erro relativo de $y=Ax$ sobre as linhas de cada matriz, contra
+binary128. Contínuo: takum com \code{vtdot.vv}; tracejado: IEEE com acúmulo ampliado. Curvas mais à
+esquerda são melhores. Uma curva que não chega a 1 tem resultados não finitos.}
+\label{fig:cdf}
+\end{figure*}
+
+\emph{32 bits.} O T32 tem o menor erro mediano nas nove matrizes, por um fator de \RATA{} a \RATB{} em
+relação ao FP32w. A maioria dos operandos tem $r\le3$, de modo que o T32 carrega de 24 a 27 bits de
+fração contra os 23 do binary32; o menor ganho ocorre em \emph{bcsstk05}, cujas entradas chegam a
+$2^{22}$ ($r=4$, 23 bits).
+
+\emph{16 bits.} O T16 é melhor que o FP16w em \emph{poisson}, \emph{gauss}, \emph{mlp}, \emph{nos4} e
+\emph{west0479}, em que a maior parte dos dados está a poucas binadas de 1 e o T16 tem 10 ou 11 bits de
+fração. Ele é pior em \emph{wide} (\WIDET{} contra \WIDEF{}), em \emph{bus494} (\BUST{} contra
+\BUSF{}) e em \emph{memplus} (\MEMTS{} contra \MEMFS{}): magnitudes em torno de $2^{\pm10}$ exigem $r=3$, restando 8 bits de fração contra os 10 do
+binary16. Esse é o custo do afunilamento, e ele só aparece enquanto o binary16 ainda tem faixa. Além dela
+a comparação se inverte: o binary16 devolve infinitos ou NaN em \NFWESTH{} das 479 linhas de
+\emph{west0479} e em \NFBCSH{} das 153 linhas de \emph{bcsstk05}, em que o T16 é finito em todas, com
+erro mediano de \BCSTSIXTEEN.
+
+\emph{8 bits.} Onde o ponto flutuante de 8 bits permanece na faixa, ele é o formato mais preciso, por um
+fator de 1,5 a 3 na mediana: o T8 tem três bits de fração apenas em $[0{,}5;\,2)$, dois nas binadas
+vizinhas e menos além delas. Ambos são grosseiros demais para \emph{poisson}, em que o cancelamento
+amplifica o arredondamento das entradas para erros acima de 100\% na maioria das linhas. A vantagem do T8
+é a faixa. O FP8w devolve infinitos ou NaN em \FPEIGHTBAD{} das 256 linhas de \emph{wide}, \NFBUS{} das
+494 de \emph{bus494}, \NFWEST{} das 479 de \emph{west0479} e em todas as \NFBCS{} de \emph{bcsstk05}, e
+nenhum núcleo evita isso, porque os próprios dados estão fora da faixa. Em \emph{memplus} o limite está na
+outra ponta: entradas de até $2^{-86}$ causam \emph{underflow} no ponto flutuante de 8 bits, cujo resultado
+erra 100\% ou mais em \MEMFEBAD{} das \MEMROWS{} linhas, contra \MEMTEBAD{} do T8, embora o erro mediano
+do ponto flutuante seja menor. O T8 devolve um resultado finito em todas as linhas de todas as matrizes.
+
+\emph{Efeito do acúmulo ampliado.} Repetindo o produto takum com \code{vtmul.vv} e \code{vtadd.vv} em SEW,
+o erro mediano cresce por um fator de 1,2 a 2,3. O estreitamento final do \code{vtdot.vv} é um único
+arredondamento, de modo que o erro restante é dominado pelo arredondamento das entradas: nas oito matrizes
+sem cancelamento sistemático, o melhor resultado possível (a referência corretamente arredondada) é menos
+de 3 vezes mais exato.
+
+\subsection{Contagem de instruções}
+
+\begin{figure}[t]
+\footnotesize
+\begin{verbatim}
+inner:
+  vsetvli    t3, t2, e16, m1, ta, ma
+  vle32.v    v8, (a2)        # colunas
+  vle16.v    v1, (a3)        # valores da linha
+  vluxei32.v v2, (a4), v8    # x[col] (indexada)
+  vtdot.vv   v4, v1, v2      # T32 += v1 . v2
+  ...                        # 6 instr. de laco
+done:
+  vsetvli    zero, s1, e16, m1, ta, ma  # vl=1
+  vncvt.t.t  v5, v4          # T32 -> T16
+  vse16.v    v5, (a5)
+
+# IEEE com o mesmo acumulo ampliado,
+# no lugar do vtdot.vv:
+  vfwmul.vv    v6, v1, v2    # produtos em binary32
+  vsetvli      zero, t3, e32, m2, ta, ma
+  vfredosum.vs v4, v6, v4
+\end{verbatim}
+\caption{Laço interno e fecho da linha do núcleo CSR para elementos de 16 bits.}
+\label{fig:asm}
+\end{figure}
+
+A Fig.~\ref{fig:asm} mostra o núcleo e a Tabela~\ref{tab:instr} conta as instruções executadas. O laço
+interno tem 11 instruções por faixa com \code{vtdot.vv}, 12 com \code{vfmul}/\code{vfredosum} e 13 com
+alargamento, que precisa de um segundo \code{vsetvli} por faixa porque os produtos e a redução usam
+larguras de elemento diferentes. O \code{vtdot.vv} produz a soma ampliada sem alterar o \code{vtype}.
+Considerando todas as matrizes e larguras, a economia frente ao núcleo IEEE da mesma classe de exatidão
+(FPw) vai de \SAVEWLO{} a \SAVEWHI\% com VLEN${}=128$; frente ao núcleo simples, de 0 a \SAVEPHI\%. A
+economia cresce com o número de não nulos por linha. Quando a linha cabe em uma única faixa, domina o
+custo fixo por linha (12 ou 13 instruções) e o núcleo takum executa tantas instruções quanto o núcleo
+IEEE simples, com a instrução fundida pagando a conversão final; as matrizes reais, exceto \emph{bcsstk05},
+têm de 3 a 7 não nulos por linha e ficam nesse caso ou perto dele.
+
+\begin{table}[t]
+\caption{Instruções executadas para $y=Ax$, SEW${}=16$, VLEN${}=128$. \emph{wide} tem a estrutura de
+\emph{gauss}.}
+\label{tab:instr}
+\centering
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+ & nnz/ & & & & \multicolumn{2}{c}{Economia vs.}\\
+Matriz & linha & Zvtakum & FP & FPw & FP & FPw\\
+\midrule
+\INSTRTABLE
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Complexidade do conjunto de instruções e dos CSRs}
+
+Além da contagem de instruções, a unidade takum elimina estado de controle e classes inteiras de
+instruções.
+
+\emph{Controle e status.} As instruções de ponto flutuante do RVV leem o modo de arredondamento
+\code{frm} (3 bits, cinco modos) e acumulam em \code{fflags} (5 bits), ambos no \code{fcsr}, que precisa
+ser salvo, restaurado e renomeado por um núcleo fora de ordem. A aritmética takum define um único modo de
+arredondamento e sinaliza resultados excepcionais em banda, com o NaR, de modo que a Zvtakum não lê nem
+escreve nenhum CSR além de \code{vl} e \code{vtype}. Em nossas execuções, os núcleos IEEE levantaram flags
+em até \FLAGPCT\% das operações sobre elementos (\FLAGWHERE), e o FP8 em \emph{wide} terminou com inexato,
+\emph{underflow}, \emph{overflow} e inválido ligados; os núcleos takum não têm esse canal lateral para
+manter.
+
+\emph{Instruções que viram operações inteiras.} Como as palavras takum se ordenam como inteiros em
+complemento de dois e a negação é a negação inteira, as seis comparações vetoriais de ponto flutuante
+(\code{vmfeq}, \code{vmfne}, \code{vmflt}, \code{vmfle}, \code{vmfgt}, \code{vmfge}), mínimo e máximo
+(\code{vfmin}, \code{vfmax}), as três instruções de injeção de sinal (\code{vfsgnj}, \code{vfsgnjn},
+\code{vfsgnjx}) e \code{vfclass} não precisam de equivalente takum: as comparações inteiras existentes,
+\code{vmin}/\code{vmax} e \code{vneg} já dão a resposta certa, com o padrão do NaR ordenado abaixo de
+todos os números. O IEEE precisa de instruções dedicadas por causa dos zeros com sinal, dos NaN não
+ordenados e da codificação em sinal e magnitude.
+
+\emph{Conversões.} Estreitar é arredondar a palavra (Tabela~\ref{tab:hw}) e alargar é acrescentar bits
+zero, o que é exato. As três larguras takum formam, portanto, uma única família de formatos, enquanto
+E4M3, E5M2, binary16, bfloat16 e binary32 precisam, cada um, de lógica própria de conversão para cada
+outro.
+
+\subsection{Limitações}
+
+O caminho de dados é combinacional e não passou por posicionamento e roteamento; não relatamos
+temporização nem uma comparação com uma ALU IEEE de mesma largura. O T16 e o T32 são verificados por
+amostragem dirigida e aleatória, não exaustivamente. Todas as matrizes, exceto \emph{memplus}, são pequenas (no máximo 494 linhas) e, nas
+reais, $x$ é aleatório; o simulador conta instruções, não ciclos. O ponto flutuante de 8 bits tem a divisão de campos do E4M3 sob as regras do IEEE~754, com infinitos.
+Escolhemos assim porque a comparação é contra o padrão IEEE~754, que não define formato de 8 bits, e isso
+mantém FP8, FP16 e FP32 como uma única aritmética em três larguras; ele difere do OFP8, cujo E4M3 não tem
+infinitos, de modo que parte dos resultados não finitos relatados para o FP8 seria, lá, saturação.
+
+%======================================================================
+\section{Conclusão}
+
+Implementamos e verificamos um caminho de dados vetorial takum para o RISC-V e o avaliamos em nível de
+instrução. Três propriedades do formato se traduzem diretamente em simplificações de hardware e de ISA: o
+cabeçalho fixo de 12 bits dá um único decodificador para todas as larguras; os padrões de bits monótonos
+transformam arredondamento, redução de largura, comparação e negação em operações inteiras; e a ausência
+de flags e de modos de arredondamento elimina o CSR de ponto flutuante. Numericamente, os takums são a
+melhor escolha em 32 bits e, para dados próximos da escala unitária, em 16 bits; em 8 bits, seu valor está
+na faixa, não na precisão. Um produto escalar fundido com acumulador de largura dupla se ajusta bem ao
+formato, porque os produtos são exatos em largura dupla, e encurta o núcleo de matriz esparsa por vetor.
+Como trabalhos futuros, ficam uma implementação com \emph{pipeline} e resultados de temporização, uma
+comparação de área em igualdade de condições com unidades IEEE e um conjunto maior de matrizes grandes.
+
+%======================================================================
+\begin{thebibliography}{00}
+\bibitem{hunhold2025avx} L.~Hunhold, ``Streamlining SIMD ISA extensions with takum arithmetic: A case
+study on Intel AVX10.2,'' in \emph{Proc.\ 14th Int.\ Conf.\ Modern Circuits and Systems Technologies
+(MOCAST)}, 2025, pp.~1--6.
+\bibitem{hunhold2024takum} L.~Hunhold, ``Beating posits at their own game: Takum arithmetic,'' in
+\emph{Next Generation Arithmetic (CoNGA 2024)}, LNCS 14666. Springer, 2024, pp.~1--51.
+\bibitem{ofp8} P.~Micikevicius \emph{et al.}, ``OCP 8-bit floating point specification (OFP8),'' Open
+Compute Project, 2023.
+\bibitem{gustafson2017} J.~L. Gustafson and I.~Yonemoto, ``Beating floating point at its own game:
+Posit arithmetic,'' \emph{Supercomputing Frontiers and Innovations}, vol.~4, no.~2, pp.~71--86, 2017.
+\bibitem{positstd} Posit Working Group, ``Standard for posit arithmetic (2022),'' 2022.
+\bibitem{hunhold2024codec} L.~Hunhold, ``Design and implementation of a takum arithmetic hardware codec
+in VHDL,'' arXiv:2408.10594, 2024.
+\bibitem{rvv} RISC-V International, ``RISC-V `V' vector extension,'' version 1.0, 2021.
+\bibitem{hunhold2025solvers} L.~Hunhold and J.~Quinlan, ``Evaluation of bfloat16, posit, and takum
+arithmetics in sparse linear solvers,'' in \emph{Proc.\ IEEE Symp.\ Computer Arithmetic (ARITH)}, 2025,
+arXiv:2412.20268.
+\bibitem{ieee754} \emph{IEEE Standard for Floating-Point Arithmetic}, IEEE Std 754-2019, 2019.
+\bibitem{libtakum} L.~Hunhold, ``libtakum,'' versão 2.0.0, 2025. [Online]. Disponível em:
+\url{https://github.com/takum-arithmetic/libtakum}
+\bibitem{duff1989} I.~S. Duff, R.~G. Grimes, and J.~G. Lewis, ``Sparse matrix test problems,''
+\emph{ACM Trans.\ Math.\ Softw.}, vol.~15, no.~1, pp.~1--14, 1989.
+\bibitem{boisvert1997} R.~F. Boisvert, R.~Pozo, K.~Remington, R.~F. Barrett, and J.~J. Dongarra, ``Matrix
+Market: A web resource for test matrix collections,'' in \emph{Quality of Numerical Software}.
+Chapman \& Hall, 1997, pp.~125--137.
+\end{thebibliography}
+
+\end{document}

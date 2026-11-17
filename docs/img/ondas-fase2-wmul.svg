@@ -1,0 +1,53 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='759' height='270' viewBox='0 0 759 270'>
+<rect width='100%' height='100%' fill='white'/>
+<text x='10' y='20' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='14' font-weight='bold' fill='#1a1a1a'>Produto em 8 bits (takum_alu) e produto alargado (takum_wmul)</text>
+<line x1='205.0' y1='30' x2='205.0' y2='248' stroke='#d5d9e0' stroke-width='1'/>
+<text x='205.0' y='262' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>80 ns</text>
+<line x1='335.0' y1='30' x2='335.0' y2='248' stroke='#d5d9e0' stroke-width='1'/>
+<text x='335.0' y='262' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>90 ns</text>
+<line x1='465.0' y1='30' x2='465.0' y2='248' stroke='#d5d9e0' stroke-width='1'/>
+<text x='465.0' y='262' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>100 ns</text>
+<line x1='595.0' y1='30' x2='595.0' y2='248' stroke='#d5d9e0' stroke-width='1'/>
+<text x='595.0' y='262' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>110 ns</text>
+<line x1='725.0' y1='30' x2='725.0' y2='248' stroke='#d5d9e0' stroke-width='1'/>
+<text x='725.0' y='262' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='10' fill='#666' text-anchor='middle'>120 ns</text>
+<text x='195' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='end'>a (T8)</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='205.0,49.0 209.0,36.0 331.0,36.0 335.0,49.0 331.0,62.0 209.0,62.0'/>
+<text x='270.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>4D = 5</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='335.0,49.0 339.0,36.0 461.0,36.0 465.0,49.0 461.0,62.0 339.0,62.0'/>
+<text x='400.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>44 = 1,5</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='465.0,49.0 469.0,36.0 721.0,36.0 725.0,49.0 721.0,62.0 469.0,62.0'/>
+<text x='595.0' y='53.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>4A = 3</text>
+<text x='195' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='end'>b (T8)</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='205.0,91.0 209.0,78.0 331.0,78.0 335.0,91.0 331.0,104.0 209.0,104.0'/>
+<text x='270.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>4A = 3</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='335.0,91.0 339.0,78.0 461.0,78.0 465.0,91.0 461.0,104.0 339.0,104.0'/>
+<text x='400.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>44 = 1,5</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='465.0,91.0 469.0,78.0 591.0,78.0 595.0,91.0 591.0,104.0 469.0,104.0'/>
+<text x='530.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>B6 = -3</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='595.0,91.0 599.0,78.0 721.0,78.0 725.0,91.0 721.0,104.0 599.0,104.0'/>
+<text x='660.0' y='95.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>80 = NaR</text>
+<text x='195' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='end'>a x b em T8</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='205.0,133.0 209.0,120.0 331.0,120.0 335.0,133.0 331.0,146.0 209.0,146.0'/>
+<text x='270.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>52 = 16</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='335.0,133.0 339.0,120.0 461.0,120.0 465.0,133.0 461.0,146.0 339.0,146.0'/>
+<text x='400.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>48 = 2</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='465.0,133.0 469.0,120.0 591.0,120.0 595.0,133.0 591.0,146.0 469.0,146.0'/>
+<text x='530.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>B0 = -8</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='595.0,133.0 599.0,120.0 721.0,120.0 725.0,133.0 721.0,146.0 599.0,146.0'/>
+<text x='660.0' y='137.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>80 = NaR</text>
+<text x='195' y='179.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='end'>a x b em T16</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='205.0,175.0 209.0,162.0 331.0,162.0 335.0,175.0 331.0,188.0 209.0,188.0'/>
+<text x='270.0' y='179.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>51C0 = 15</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='335.0,175.0 339.0,162.0 461.0,162.0 465.0,175.0 461.0,188.0 339.0,188.0'/>
+<text x='400.0' y='179.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>4880 = 2,25</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='465.0,175.0 469.0,162.0 591.0,162.0 595.0,175.0 591.0,188.0 469.0,188.0'/>
+<text x='530.0' y='179.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>AFC0 = -9</text>
+<polygon fill='#eaf1fb' stroke='#1b4f9c' stroke-width='1.3' points='595.0,175.0 599.0,162.0 721.0,162.0 725.0,175.0 721.0,188.0 599.0,188.0'/>
+<text x='660.0' y='179.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#1a1a1a' text-anchor='middle'>8000 = NaR</text>
+<text x='195' y='221.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='12' fill='#8a4b00' text-anchor='end'>o que acontece</text>
+<text x='270.0' y='221.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>15 não cabe em T8</text>
+<text x='400.0' y='221.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>2,25 não cabe em T8</text>
+<text x='530.0' y='221.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>sinais diferentes</text>
+<text x='660.0' y='221.0' font-family='Menlo, DejaVu Sans Mono, Courier New, monospace' font-size='11' font-style='italic' fill='#8a4b00' text-anchor='middle'>NaR contamina</text>
+</svg>

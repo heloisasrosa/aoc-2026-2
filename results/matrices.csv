@@ -1,0 +1,10 @@
+matrix,source,rows,cols,nnz,nnz_per_row,log2_min,log2_max
+poisson,sintética,256,256,1216,4.8,0.0,2.0
+gauss,sintética,256,256,2560,10.0,-13.4,1.8
+wide,sintética,256,256,2560,10.0,-10.0,10.0
+mlp,sintética,256,512,13056,51.0,-14.7,-0.2
+nos4,Matrix Market,100,100,594,5.9,-5.8,-1.2
+bus494,Matrix Market,494,494,1666,3.4,-2.6,14.3
+west0479,Matrix Market,479,479,1910,4.0,-21.4,18.3
+bcsstk05,Matrix Market,153,153,2423,15.8,-31.0,21.7
+memplus,Matrix Market,17758,17758,126150,7.1,-85.9,0.5
